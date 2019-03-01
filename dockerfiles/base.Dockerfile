@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-MAINTAINER Eric T Dawson
+LABEL maintainer="Eric T Dawson"
 
 RUN  export DEBIAN_FRONTEND=noninteractive && \
 echo "America/New_York" > /etc/timezone && \
