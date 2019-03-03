@@ -44,5 +44,7 @@ RUN wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar
 RUN wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && tar xfj samtools-1.9.tar.bz2 && cd samtools-1.9 && make -j 4 && make install && rm -rf samtools-1.9.tar.bz2
 RUN wget https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2 && tar xjf bcftools-1.9.tar.bz2 && cd bcftools-1.9 && make -j 4 && make install && rm -rf bcftools-1.9.tar.bz2
 
+RUN git clone https://github.com/edawson/helpy.git && mv helpy/* /usr/bin/
+
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ENV PATH=/usr/bin/:$PATH
