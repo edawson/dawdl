@@ -3,18 +3,14 @@ task VariantBamExtract{
     File bamIndex
     File rulesJSON
     String label
-    String? tag
     Int threads
     Int diskGB
 
     String outbase = basename(bam, ".bam")
-
-    String outfile = outbase + "."  + label + "." + select_first([tag + ".", ""]) + "bam"
-
-
+    String outfile = outbase + "."  + label + "."  + "bam"
 
     command {
-        variantbam ${bam} -r ${rulesJSON} -t ${threads} > ${outbase}.${label}.bam
+        variantbam ${bam} -r ${rulesJSON} -t ${threads} > ${outfile}.bam
     }
 
 

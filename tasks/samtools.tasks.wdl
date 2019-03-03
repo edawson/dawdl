@@ -3,12 +3,13 @@ task SamtoolsSort{
     Int? threads
     Int? memoryPerThread
     Int? diskGB
+    Int? preemptible_attempts
 
     String outbase = basename(inputBAM, ".bam")
     
     Int selectedMem = select_first([memoryPerThread, 1])
 
-    Int totalMem = 4 * selectedMem
+    Int totalMem = threads * selectedMem
 
     command {
         samtools sort -m ${memoryPerThread}G  -o ${outbase}.sorted.bam -@ ${threads} ${inputBAM} && \
@@ -21,6 +22,7 @@ task SamtoolsSort{
         cpu : "${threads}"
         memory : totalMem + 1.7 + " GB"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : preemptible_attempts
     }
 
     output{

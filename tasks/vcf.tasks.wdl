@@ -1,4 +1,4 @@
-task vcfIndexTask{
+task VCFIndexTask{
     File inputVCF
     Int? threads
     Int? memory
