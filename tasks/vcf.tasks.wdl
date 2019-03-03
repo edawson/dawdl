@@ -1,13 +1,10 @@
-task vcf_index{
+task vcfIndexTask{
     File inputVCF
     Int? threads
     Int? memory
     Int? diskGB
 
     Int selectedMem = select_first([memory, 0])
-
-
-
     String outbase = basename(inputVCF, ".vcf")
 
     

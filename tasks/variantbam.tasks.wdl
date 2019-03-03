@@ -1,4 +1,4 @@
-task variantbam_extract_task{
+task VariantBamExtract{
     File bam
     File bamIndex
     File rulesJSON
@@ -9,7 +9,7 @@ task variantbam_extract_task{
 
     String outbase = basename(bam, ".bam")
 
-    String outfile = outbase + "."  + label + "." + select_first([tag + ".", ""]) + ".bam"
+    String outfile = outbase + "."  + label + "." + select_first([tag + ".", ""]) + "bam"
 
 
 
