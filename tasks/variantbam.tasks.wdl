@@ -1,4 +1,4 @@
-task VariantBamExtract{
+task VariantBamExtractTask{
     File bam
     File bamIndex
     File rulesJSON
@@ -10,7 +10,7 @@ task VariantBamExtract{
     String outfile = outbase + "."  + label + "."  + "bam"
 
     command {
-        variantbam ${bam} -r ${rulesJSON} -t ${threads} > ${outfile}.bam
+        variant ${bam} -r ${rulesJSON} -t ${threads} > ${outfile}.bam
     }
 
 
@@ -19,10 +19,15 @@ task VariantBamExtract{
         cpus : "${threads}"
         memory : "3.2 GB"
         preemptible_tries : 1
+        disks : "local-disk " + diskGB + " HDD"
     }
 
     output{
         File variantbam_extracted_bam = "${outfile}"
     }
+}
+
+workflow dummyflow{
+
 }
 

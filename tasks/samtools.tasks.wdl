@@ -1,9 +1,9 @@
-task SamtoolsSort{
+task SamtoolsSortTask{
     File inputBAM
-    Int? threads
-    Int? memoryPerThread
-    Int? diskGB
-    Int? preemptible_attempts
+    Int threads
+    Int memoryPerThread
+    Int diskGB
+    Int preemptible_attempts
 
     String outbase = basename(inputBAM, ".bam")
     
@@ -31,7 +31,7 @@ task SamtoolsSort{
     }
 }
 
-task SamtoolsIndex{
+task SamtoolsIndexTask{
     File inputBAM
     Int diskGB
 
@@ -51,7 +51,7 @@ task SamtoolsIndex{
     }
 }
 
-task SamtoolsMerge{
+task SamtoolsMergeTask{
     Array[File] bams
     Array[File] bais
     String outbase
@@ -59,7 +59,7 @@ task SamtoolsMerge{
     Int? threads
     Int? memory
 
-    memory = select_first([memory, 1.5])
+    Float memGB = select_first([memory, 1.5])
 
     command{
         samtools merge -b ${write_lines(bams)} > ${outbase}.bam
@@ -69,7 +69,11 @@ task SamtoolsMerge{
         docker : "erictdawson/samtools"
         cpu : 1
         disks : "local-disk " + diskGB + " GB"
-        memory : memory + " GB"
+        memory : memGB+ " GB"
         preemptible : 0
     }
+}
+
+workflow dummyflow{
+    
 }
