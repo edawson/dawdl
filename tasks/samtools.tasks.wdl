@@ -13,7 +13,7 @@ task SamtoolsSortTask{
 
     command {
         samtools sort -m ${memoryPerThread}G  -o ${outbase}.sorted.bam -@ ${threads} ${inputBAM} && \
-        samtools index -t ${threads} ${outbase}.sorted.bam
+        samtools index -@ ${threads} ${outbase}.sorted.bam
     }
 
 
