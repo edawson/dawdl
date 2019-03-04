@@ -8,14 +8,15 @@ task restrict_bam{
     File inputBAI
     File restrictBED
     Int? threads
+    Int? memory
     Int? diskGB
 
     Int selectedMem = select_first([memory, 0])
-    String outbase = basename(inputVCF, ".bam") + "." + basename(shardBED, ".bed")
+    String outbase = basename(inputBAM, ".bam") + "." + basename(restrictBED, ".bed")
 
     
     command {
-       samtools view -L ${shardBED} -@ ${threads} -b ${inputBAM} > ${outbase}.restricted.bam && \
+       samtools view -L ${restrictBED} -@ ${threads} -b ${inputBAM} > ${outbase}.restricted.bam && \
        samtools index ${outbase}.restricted.bam
     }
 
@@ -45,34 +46,36 @@ task shard_bam{
     File shardBED
     Int? slop
     Int? threads
+    Int? memory
     Int? compressionThreads
     Int? diskGB
 
     Int selectedMem = select_first([memory, 0])
-    slop = select_first([slop, 0])
-    compressionThreads = select_first([compressionThreads, 1])
-    threads = select_first([threads, 1])
-    String outbase = basename(inputVCF, ".bam") + "." + basename(shardBED, ".bed")
+    Int usedSlop = select_first([slop, 0])
+    Int usedCompressionThreads = select_first([compressionThreads, 1])
+    Int usedThreads = select_first([threads, 1])
+    String outbase = basename(inputBAM, ".bam") + "." + basename(shardBED, ".bed")
 
+    String dollar = "$"
     
-    command {
+    command <<<
        for i in `wc -l ${shardBED}`
         do
-            echo "samtools view -h -@ ${compressionThreads} -b ${inputBAM} $(sed -n ${i}p ${shardBED} | bed_to_samtools_region) > ${outbase}.shard.${i}.bam" >> jfile.txt
+            echo "samtools view -h -@ ${usedCompressionThreads} -b ${inputBAM} $(sed -n ${dollar}{i}p ${shardBED} | bed_to_samtools_region) > ${outbase}.shard.${dollar}{i}.bam" >> jfile.txt
         done && \
-        python launcher.py -i jfile.txt -c 1 -n ${threads} 
-    }
+        python launcher.py -i jfile.txt -c 1 -n ${usedThreads} 
+    >>>
 
 
     runtime{
         docker : "erictdawson/samtools"
-        cpu : "${threads}"
+        cpu : "${usedThreads}"
         memory : selectedMem + 1.5 + " GB"
         disks : "local-disk " + diskGB + " HDD"
         preemptible : 3
     }
 
     output{
-        Array[File] bamShards = "${outbase}.shard.*.bam"
+        Array[File] bamShards = glob("${outbase}.shard.*.bam")
     }
 }
