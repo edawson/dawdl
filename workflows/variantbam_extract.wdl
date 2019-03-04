@@ -2,8 +2,8 @@
 ## using VariantBam (github.com/walaj/variantbam,
 ## though github.com/edawson/variantbam is the version used)
 ## according to a set of rules defined by a JSON file.
-import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Avariantbam-tasks/versions/1/plain-WDL/descriptor" as vbam
-import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Asamtools-tasks/versions/3/plain-WDL/descriptor" as samtools
+import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Avariantbam-tasks/versions/5/plain-WDL/descriptor" as vbam
+import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Asamtools-tasks/versions/4/plain-WDL/descriptor" as samtools
 
 
 workflow VariantBamExtract{
@@ -16,7 +16,7 @@ workflow VariantBamExtract{
 
     Int numthreads = select_first([threads, 0])
     # Compute disk size
-    Int diskGB = ceil((size(BAM, "GB") * 1.2) + size(BAI, "GB"))
+    Int diskGB = ceil((size(BAM, "GB") * 2) + size(BAI, "GB"))
 
     call vbam.VariantBamExtractTask{
         input:

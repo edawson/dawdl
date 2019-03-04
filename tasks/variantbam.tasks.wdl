@@ -6,11 +6,10 @@ task VariantBamExtractTask{
     Int threads
     Int diskGB
 
-    String outbase = basename(bam, ".bam")
-    String outfile = outbase + "."  + label + "."  + "bam"
+    String outbase = basename(bam, ".bam") + "." + label + ".bam"
 
     command {
-        variant ${bam} -r ${rulesJSON} -t ${threads} > ${outfile}.bam
+        variant ${bam} -r ${rulesJSON} -t ${threads} > ${outbase}.bam
     }
 
 
@@ -24,7 +23,7 @@ task VariantBamExtractTask{
     }
 
     output{
-        File variantbam_extracted_bam = "${outfile}"
+        File variantbam_extracted_bam = "${outbase}.bam"
     }
 }
 
