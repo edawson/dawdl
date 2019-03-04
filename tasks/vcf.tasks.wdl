@@ -1,8 +1,8 @@
 task VCFIndexTask{
     File inputVCF
-    Int? threads
+    Int threads
     Int? memory
-    Int? diskGB
+    Int diskGB
 
     Int selectedMem = select_first([memory, 0])
     String outbase = basename(inputVCF, ".vcf")
@@ -32,7 +32,6 @@ task VCFSliceTask{
     File inputTBI
     File restrictBED
     Int? memory
-    Int? threads
     Int diskGB
 
     Int selectedMem = select_first([memory, 0])
@@ -45,7 +44,7 @@ task VCFSliceTask{
 
     runtime{
         docker : "erictdawson/bedtools"
-        cpu : "${threads}"
+        cpu : 1
         memory : selectedMem + 1.5 + " GB"
         disks : "local-disk " + diskGB + " HDD"
     }
