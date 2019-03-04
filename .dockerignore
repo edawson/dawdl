@@ -1,5 +1,7 @@
 *.sh
 *.md
 tasks/
+data/
 workflows/
 dockerfiles/
+*.bam
