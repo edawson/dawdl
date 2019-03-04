@@ -23,12 +23,18 @@ The Dockerfiles defined here all follow the following conventions:
 4. They have no ENTRYPOINT or CMD defined (i.e. they call `bash` when run). This is essential when targeting them
 to run on FireCloud.
 
+All of these should be publicly available as both the Dockerfiles and images.
+
+
 ## Tasks
 Tasks are defined in the task directory. A WDL task usually defines a small unit of work (e.g. index a BAM file) that may
 be part of a larger workflow composed of many tasks.
 
 In dawdl, the [tasks](https://github.com/edawson/dawdl/blob/master) directory contains tasks for various tools. Tasks for the same
 tool are defined in a single file named for the base command (e.g. `samtools sort` and `samtools index` are defined in `samtools.wdl).
+
+To be pushed to FireCloud, WDLs must contain a workflow definition, so all the tasks here have a dummy workflow definition at the
+bottom of the WDL.
 
 ## Workflows
 Workflows are composed of tasks linked together by "plumbing," which describes the order and dependencies of component tasks. Where possible, I have implemented parallelization in workflows using the Scatter-Gather paradigm described in WDL.

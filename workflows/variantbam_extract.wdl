@@ -2,8 +2,8 @@
 ## using VariantBam (github.com/walaj/variantbam,
 ## though github.com/edawson/variantbam is the version used)
 ## according to a set of rules defined by a JSON file.
-import "https://github.com/edawson/dawdl/tasks/variantbam.tasks.wdl"
-import "https://github.com/edawson/dawdl/tasks/samtools.tasks.wdl"
+import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Avariantbam-tasks/versions/1/plain-WDL/descriptor" as vbam
+import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Asamtools-tasks/versions/3/plain-WDL/descriptor" as samtools
 
 
 workflow VariantBamExtract{
@@ -18,7 +18,7 @@ workflow VariantBamExtract{
     # Compute disk size
     Int diskGB = ceil((size(BAM, "GB") * 1.2) + size(BAI, "GB"))
 
-    call VariantBamExtract{
+    call vbam.VariantBamExtractTask{
         input:
             bam=BAM,
             bamIndex=BAI,
@@ -28,14 +28,14 @@ workflow VariantBamExtract{
             diskGB=diskGB
     }
 
-    Int smallerDiskGB = ceil(size(VariantBamExtract.variantbam_extracted_bam, "GB") * 1.4)
+    Int smallerDiskGB = ceil(size(VariantBamExtractTask.variantbam_extracted_bam, "GB") * 1.4)
 
-    call SamtoolsSort{
+    call samtools.SamtoolsSortTask{
         input:
-            inputBAM=VariantBamExtract.variantbam_extracted_bam,
+            inputBAM=VariantBamExtractTask.variantbam_extracted_bam,
             threads=threads,
             diskGB=smallerDiskGB,
-            memory_per_thread=memory_per_thread,
+            memoryPerThread=memory_per_thread,
             preemptible_attempts=1
     }
     
