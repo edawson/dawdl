@@ -27,6 +27,29 @@ task VCFIndexTask{
     }
 }
 
+task VCFSortTask{
+    File inputVCF
+
+    Int diskGB
+
+    String outbase = basename(basename(inputVCF, "vcf"), ".gz")
+
+    command{
+        vcfsort ${inputVCF} > ${outbase}.sorted.vcf
+    }
+
+    runtime{
+        docker : "erictdawson/samtools"
+        cpu : 1
+        memory : "14 GB"
+        disks : "local-disk " + diskGB + " HDD"
+    }
+
+    output{
+        File sortedVCF = "${outbase}.sorted.vcf"
+    }
+}
+
 task VCFSliceTask{
     File inputVCF
     File inputTBI

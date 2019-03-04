@@ -3,7 +3,7 @@
 # Restrict a single BAM file to the regions provided 
 # in a BED file.
 # Consumes a single BAM file, produces a single BAM file.
-task restrict_bam{
+task RestrictBamTask{
     File inputBAM
     File inputBAI
     File restrictBED
@@ -40,7 +40,7 @@ task restrict_bam{
 # bedtools_to_samtools_region is from github.com/edawson/helpy
 # launcher.py is from github.com/edawson/LaunChair
 # N.B.: BAM files returned are not sorted or indexed.
-task shard_bam{
+task ShardBamTask{
     File inputBAM
     File inputBAI
     File shardBED
@@ -78,4 +78,8 @@ task shard_bam{
     output{
         Array[File] bamShards = glob("${outbase}.shard.*.bam")
     }
+}
+
+workflow dummyflow{
+    
 }
