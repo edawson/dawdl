@@ -16,9 +16,10 @@ task VariantBamExtractTask{
 
     runtime {
         docker : "erictdawson/variantbam"
-        cpus : "${threads}"
+        bootDiskSizeGb: 20
+        cpu : "${threads}"
         memory : "3.2 GB"
-        preemptible_tries : 1
+        preemptible : 1
         disks : "local-disk " + diskGB + " HDD"
     }
 

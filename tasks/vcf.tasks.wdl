@@ -54,3 +54,7 @@ task VCFSliceTask{
         File slicedVCF = "${outbase}.${restrictBase}.vcf"
     }
 }
+
+workflow dummyFlow{
+
+}
