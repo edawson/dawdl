@@ -1,7 +1,7 @@
 ## Sorts a given VCF file and then indexes it,
 ## Returning a bgzip compressed VCF and a TBI index.
 ## input VCF may be sorted or not, bgzipped or not.
-import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Avcf-tasks/versions/1/plain-WDL/descriptor" as vcfTasks
+import "https://api.firecloud.org/ga4gh/v1/tools/erictdawson%3Avcf-tasks/versions/12/plain-WDL/descriptor" as vcfTasks
 
 workflow SortAndIndexVCF{
     File inputVCF
@@ -9,7 +9,6 @@ workflow SortAndIndexVCF{
     Int threads
 
     Int diskGB = ceil((size(inputVCF, "GB") * 2)) + 50
-
     
 
     call vcfTasks.VCFSortTask as firstSort{
@@ -23,8 +22,7 @@ workflow SortAndIndexVCF{
     call vcfTasks.VCFIndexTask as firstIndex{
         input:
             inputVCF=firstSort.sortedVCF,
-            diskGB=secondDiskSize,
-            threads=threads
+            diskGB=secondDiskSize
     }
 
     Int sliceDiskSZ = ceil(size(firstIndex.indexedVCFgz, "GB") * 2) + 50
@@ -48,8 +46,7 @@ workflow SortAndIndexVCF{
     call vcfTasks.VCFIndexTask as finalIndex{
         input:
             inputVCF=finalSort.sortedVCF,
-            diskGB=finalSortedSize,
-            threads=threads
+            diskGB=finalSortedSize
     }
 
 

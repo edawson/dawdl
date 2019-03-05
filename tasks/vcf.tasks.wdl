@@ -6,12 +6,12 @@ task VCFIndexTask{
 
     Int selectedMem = select_first([memory, 0])
 
-    String infileBase = basename(inputVCF)
+    String infileBase = basename(basename(inputVCF, ".gz"), ".vcf")
 
     
     command {
-       bgzip -c ${"-@ " + threads} ${inputVCF} > ${infileBase}.gz && \
-       tabix ${infileBase}.gz
+       bgzip -c ${"-@ " + threads} ${inputVCF} > ${infileBase}.vcf.gz && \
+       tabix ${infileBase}.vcf.gz
     }
 
 
@@ -24,8 +24,8 @@ task VCFIndexTask{
     }
 
     output{
-        File indexedVCFgz = "${infileBase}.gz"
-        File indexedVCFtbi = "${infileBase}.gz.tbi"
+        File indexedVCFgz = "${infileBase}.vcf.gz"
+        File indexedVCFtbi = "${infileBase}.vcf.gz.tbi"
     }
 }
 
