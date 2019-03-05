@@ -1,16 +1,17 @@
 task VCFIndexTask{
     File inputVCF
-    Int threads
     Int? memory
+    Int? threads
     Int diskGB
 
     Int selectedMem = select_first([memory, 0])
-    String outbase = basename(inputVCF, ".vcf")
+
+    String infileBase = basename(inputVCF)
 
     
     command {
-       bgzip ${"-@=" + threads} ${inputVCF} && \
-       tabix ${outbase}.vcf.gz
+       bgzip -c ${"-@ " + threads} ${inputVCF} > ${infileBase}.gz && \
+       tabix ${infileBase}.gz
     }
 
 
@@ -19,11 +20,12 @@ task VCFIndexTask{
         cpu : "${threads}"
         memory : selectedMem + 1.5 + " GB"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : 2
     }
 
     output{
-        File indexedVCFgz = "${outbase}.vcf.gz"
-        File indexVCFtbi = "${outbase}.vcf.gz"
+        File indexedVCFgz = "${infileBase}.gz"
+        File indexedVCFtbi = "${infileBase}.gz.tbi"
     }
 }
 
@@ -32,7 +34,7 @@ task VCFSortTask{
 
     Int diskGB
 
-    String outbase = basename(basename(inputVCF, "vcf"), ".gz")
+    String outbase = basename(basename(inputVCF, ".gz"), ".vcf")
 
     command{
         vcfsort ${inputVCF} > ${outbase}.sorted.vcf
@@ -43,6 +45,7 @@ task VCFSortTask{
         cpu : 1
         memory : "14 GB"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : 2
     }
 
     output{
@@ -70,6 +73,7 @@ task VCFSliceTask{
         cpu : 1
         memory : selectedMem + 1.5 + " GB"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : 2
     }
 
     output{
