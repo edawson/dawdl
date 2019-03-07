@@ -9,13 +9,14 @@ task BamMatcherTask{
     File secondBAI
 
     File reference
+    File refFAI
 
     Int diskGB
 
     String output_name = basename(firstBAM, ".bam") + "." + basename(secondBAM, ".bam") + ".bam-matcher-report.txt"
     
     command<<<
-        bam-matcher-wrapper.sh ${firstBAM} ${secondBAM} ${reference} `pwd`
+        bam-matcher-wrapper.sh ${firstBAM} ${secondBAM} ${reference} "/app/bam-matcher" `pwd`
     >>>
 
     runtime{
@@ -38,6 +39,7 @@ workflow BamMatcher{
     File secondBAM
     File secondBAI
     File reference
+    File refFAI
 
     Int diskGB = ceil(size(firstBAM, "GB") + size(secondBAM, "GB") + size(firstBAI, "GB") + size(secondBAI, "GB") + size(reference, "GB")) + 20
 
@@ -48,8 +50,8 @@ workflow BamMatcher{
             secondBAM=secondBAM,
             secondBAI=secondBAI,
             reference=reference,
+            refFAI=refFAI,
             diskGB=diskGB
 
     }
-
 }
