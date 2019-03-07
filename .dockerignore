@@ -5,3 +5,5 @@ data/
 workflows/
 dockerfiles/
 *.bam
+cromwell*
+*.jar
