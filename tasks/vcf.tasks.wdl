@@ -81,6 +81,34 @@ task VCFSliceTask{
     }
 }
 
+task VCFSliceFastWithDiskTask{
+    File inputVCF
+    File? inputTBI
+    File restrictBED
+    Int diskGB
+
+    String outbase = basename(inputVCF, ".vcf")
+    String restrictbase = basename(basename(restrictBED, ".bed"), ".gz")
+
+    command{
+        bedtools intersect -wa -sorted -header -nonamecheck -a <(pigz -d -c -p 5 ${inputVCF}) -b ${restrictBED} | pigz -c -p 5 > ${outbase}.${restrictbase}.vcf
+        }
+
+    runtime{
+        docker : "erictdawson/bedtools"
+        cpu : 12
+        memory : "3.7 GB"
+        disks : "local-disk " + diskGB + " HDD"
+        preemptible : 1
+    }
+
+    output{
+        File slicedVCF = "${outbase}.${restrictbase}.vcf"
+    }
+}
+
 workflow dummyFlow{
 
 }
+
+

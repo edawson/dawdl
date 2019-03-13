@@ -1,3 +1,4 @@
 *.jar
 *.o
 data/
+cromwell-*

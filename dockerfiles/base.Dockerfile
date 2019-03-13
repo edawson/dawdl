@@ -48,3 +48,20 @@ RUN git clone https://github.com/edawson/helpy.git && mv helpy/* /usr/bin/
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ENV PATH=/usr/bin/:$PATH
+
+RUN wget http://zlib.net/zlib-1.2.11.tar.gz && \
+    tar xzf zlib-1.2.11.tar.gz && \
+    cd zlib-1.2.11 && \
+    ./configure && \
+    make && \
+    make install
+RUN wget http://zlib.net/pigz/pigz-2.4.tar.gz && \
+    tar xzf pigz-2.4.tar.gz && \
+    cd pigz-2.4 && \
+    make && \
+    mv pigz /usr/bin/ && \
+    mv unpigz /usr/bin/
+
+RUN git clone --recursive https://github.com/edawson/interleave-fastq && \
+    chmod 777 interleave-fastq/interleave-fastq && \
+    mv interleave-fastq/interleave-fastq /usr/bin/
