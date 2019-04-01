@@ -91,7 +91,12 @@ task VCFSliceFastWithDiskTask{
     String restrictbase = basename(basename(restrictBED, ".bed"), ".gz")
 
     command{
-        bedtools intersect -wa -sorted -header -nonamecheck -a <(pigz -d -c -p 5 ${inputVCF}) -b ${restrictBED} | pigz -c -p 5 > ${outbase}.${restrictbase}.vcf
+        bedtools intersect -wa -sorted -header -nonamecheck \
+        -a <(pigz -d -c -p 4 ${inputVCF} | vcfsort-streaming-parallel ) \
+        -b ${restrictBED} \
+        > ${outbase}.${restrictbase}.vcf && \
+        bgzip -@12 ${outbase}.${restrictbase}.vcf && \
+        tabix -f ${outbase}.${restrictbase}.vcf.gz
         }
 
     runtime{
@@ -103,7 +108,8 @@ task VCFSliceFastWithDiskTask{
     }
 
     output{
-        File slicedVCF = "${outbase}.${restrictbase}.vcf"
+        File slicedVCF = "${outbase}.${restrictbase}.vcf.gz"
+        File slicedVCFtbi = "${outbase}.${restrictbase}.vcf.gz.tbi"
     }
 }
 
