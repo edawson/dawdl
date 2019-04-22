@@ -20,7 +20,7 @@ task VCFIndexTask{
         cpu : "${threads}"
         memory : selectedMem + 1.5 + " GB"
         disks : "local-disk " + diskGB + " HDD"
-        preemptible : 2
+        preemptible : 4
     }
 
     output{
@@ -43,9 +43,33 @@ task VCFSortTask{
     runtime{
         docker : "erictdawson/samtools"
         cpu : 1
-        memory : "14 GB"
+        memory : "3 GB"
         disks : "local-disk " + diskGB + " HDD"
         preemptible : 2
+    }
+
+    output{
+        File sortedVCF = "${outbase}.sorted.vcf"
+    }
+}
+
+task VCFSortParallelTask{
+    File inputVCF
+
+    Int diskGB
+
+    String outbase = basename(basename(inputVCF, ".gz"), ".vcf")
+
+    command{
+        vcfsort-parallel ${inputVCF} > ${outbase}.sorted.vcf
+    }
+
+    runtime{
+        docker : "erictdawson/samtools"
+        cpu : 4
+        memory : "7 GB"
+        disks : "local-disk " + diskGB + " HDD"
+        preemptible : 4
     }
 
     output{
@@ -81,11 +105,12 @@ task VCFSliceTask{
     }
 }
 
-task VCFSliceFastWithDiskTask{
+task VCFSliceFast{
     File inputVCF
     File? inputTBI
     File restrictBED
     Int diskGB
+    String diskType = " HDD"
 
     String outbase = basename(inputVCF, ".vcf")
     String restrictbase = basename(basename(restrictBED, ".bed"), ".gz")
@@ -101,10 +126,10 @@ task VCFSliceFastWithDiskTask{
 
     runtime{
         docker : "erictdawson/bedtools"
-        cpu : 12
-        memory : "3.7 GB"
+        cpu : 16
+        memory : "13 GB"
         disks : "local-disk " + diskGB + " HDD"
-        preemptible : 1
+        preemptible : 2
     }
 
     output{
