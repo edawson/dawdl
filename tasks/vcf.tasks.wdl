@@ -86,6 +86,7 @@ task VCFSliceFastWithDiskTask{
     File? inputTBI
     File restrictBED
     Int diskGB
+    String? diskType = "HDD"
 
     String outbase = basename(inputVCF, ".vcf")
     String restrictbase = basename(basename(restrictBED, ".bed"), ".gz")
@@ -103,7 +104,7 @@ task VCFSliceFastWithDiskTask{
         docker : "erictdawson/bedtools"
         cpu : 12
         memory : "3.7 GB"
-        disks : "local-disk " + diskGB + " HDD"
+        disks : "local-disk " + diskGB + " " + diskType
         preemptible : 1
     }
 
