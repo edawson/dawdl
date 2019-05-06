@@ -17,7 +17,7 @@ task FastqInterleaveGZTask{
         disks : "local-disk " + diskGB + " HDD"
     }
 
-    outputs{
+    output {
         File interleaved_fastq = "${outbase}.interleaved.fq.gz"
     }
 }
@@ -29,7 +29,7 @@ task FastqSplitTask{
     Int linesPerFile
     Int diskGB
 
-    String outbase = basename(basename(basename(basename(basename(basename(firstFQ, ".gz"), ".fq"), ".fastq"), ".fa"),"fasta"), "_1")
+    String outbase = basename(basename(basename(basename(basename(firstFQ, ".gz"), ".fq"), ".fastq"), ".fa"),"fasta")
 
 
     command {
@@ -43,7 +43,7 @@ task FastqSplitTask{
         disks : "local-disk " + diskGB + " HDD"
     }
 
-    outputs{
+    output {
         Array[File] fastq_splits = glob("*split*.gz")
     }
 }
