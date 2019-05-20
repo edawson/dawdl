@@ -77,7 +77,7 @@ task VCFSortParallelTask{
     }
 }
 
-task VCFSliceTask{
+task VCFSliceByBedTask{
     File inputVCF
     File inputTBI
     File restrictBED
@@ -105,7 +105,7 @@ task VCFSliceTask{
     }
 }
 
-task VCFSliceFast{
+task VCFSliceByBedFast{
     File inputVCF
     File? inputTBI
     File restrictBED

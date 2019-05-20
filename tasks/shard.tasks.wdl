@@ -58,9 +58,37 @@ task shardFASTATask{
     }
 }
 
-task shardVCFTask{
+task sliceVCFByChromTask{
     File inputVCF
-    File inputBED
+    String chrom
+    Int diskGB
+
+    String outbase = basename(basename(inputVCF, ".gz"), ".vcf")
+
+    command{
+        tabix -f ${inputVCF} && tabix -h ${inputVCF} ${chrom} > ${outbase}.${chrom}.vcf
+    }
+
+    runtime{
+        docker : "erictdawson/samtools"
+        cpu : 1
+        memory : "1GB"
+        disks : "local-disk " + diskGB + " HDD"
+        preemptible : 4
+    }
+
+    output{
+        File chromVCF = "${outbase}.${chrom}.vcf"
+    }
+}
+
+task shardVCFByChromTask{
+    File inputVCFGZ
+    File inputTBI
+    File chromFile
+    Int diskGB
+
+    String outbase = basename(basename(inputVCFGZ, ".gz"), ".vcf")
 
     command{
 
@@ -73,7 +101,9 @@ task shardVCFTask{
     output{
 
     }
+}
 
+task ShardVCFByBedTask{
 
 }
 

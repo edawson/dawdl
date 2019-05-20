@@ -15,7 +15,7 @@ task TelSeqTasks{
         cpu : 1
         memory : "6GB"
         disks : "local-disk " + diskGB + " HDD"
-        preemptible : 4
+        preemptible : 3
     }
 
     output{
