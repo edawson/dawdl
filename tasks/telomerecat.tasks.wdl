@@ -5,6 +5,7 @@ task telomerecatBamToTelbamTask{
     Int diskGB
 
     String outname = basename(inputBAM, ".bam") + "_telbam.bam"
+    Int mem = ceil(threads * 3.5)
 
 
     command{
@@ -13,9 +14,10 @@ task telomerecatBamToTelbamTask{
 
     runtime{
         docker : "erictdawson/telomerecat"
-        memory : "8 GB"
+        memory : mem + "GB"
         cpu : "${threads}"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : 4
     }
     output{
         File telBAM = "${outname}"
@@ -36,8 +38,9 @@ task telomerecatTelbamToLengthTask{
     runtime{
         docker : "erictdawson/telomerecat"
         cpu : "${threads}"
-        memory : "8 GB"
+        memory : "6 GB"
         disks : "local-disk " + diskGB + " HDD"
+        preemptible : 4
     }
 
     output{
