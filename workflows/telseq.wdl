@@ -15,7 +15,7 @@ task TELSEQ_TASK{
         memory : "3.7 GB"
         bootDiskSizeGb: 12
         disks : "local-disk " + diskGB + " HDD"
-        preemptible : 2
+        preemptible : 5
     }
 
     output{
