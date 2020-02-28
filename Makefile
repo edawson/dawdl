@@ -20,6 +20,11 @@ push: build  make_tags
 	#+docker push $(PUSH_REPO)/$(APP):latest && touch make_tags/$(APP).latest
 	#+docker push $(PUSH_REPO)/$(APP):$(date) && touch make_tags/$(APP).$(date)
 
+base: base/base.Dockerfile
+	docker build -t erictdawson/base -f base/base.Dockerfile . && touch make_tags/base.built
+	+docker tag erictdawson/base erictdawson/base:latest
+	+docker tag erictdawson/base erictdawson/base:$(date)
+
 clean:
 	$(RM) make_tags
 
