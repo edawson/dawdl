@@ -11,7 +11,7 @@ task download_and_store {
         axel "~{fileLocation}" && gsutil -m cp $(echo "~{outfile}" | cut -f 1 -d "?") "${gcpBucketLocation}" && touch finished.txt
     }
     runtime {
-
+	docker : "erictdawson/downloader"
     }
     output {
         File dummyOutput = "finished.txt"
