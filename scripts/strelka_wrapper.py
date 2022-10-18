@@ -1,5 +1,8 @@
+
+#!/usr/bin/env python
 from __future__ import print_function
 import argparse
+import subprocess
 
 def run_germline(args):
     # cmd = f"mkdir -p {args.work_directory} && cd {args.work_directory}"
@@ -19,6 +22,7 @@ def run_germline(args):
     cmd += "--runDir " + args.work_directory + " "
     cmd += " && cd " + args.work_directory + " && ./runWorkflow.py -m local -j " + str(args.parallel_threads)
     print(cmd)
+    subprocess.call(cmd, shell=True)
 
     return 0
 
