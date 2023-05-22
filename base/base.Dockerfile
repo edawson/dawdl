@@ -1,5 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 LABEL maintainer="Eric T Dawson"
+
+ARG SAMTOOLS_VERSION=1.15
 
 RUN  export DEBIAN_FRONTEND=noninteractive && \
 echo "America/New_York" > /etc/timezone && \
@@ -19,9 +21,7 @@ apt-get update &&  apt-get install -y \
     libbz2-dev \
     liblzma-dev \
     ldc \
-    python-dev \
-    python-pip \
-    python2.7 \
+    pigz \
     tar \
     wget \
     zlib1g-dev \
@@ -37,41 +37,33 @@ RUN git clone https://github.com/edawson/LaunChair.git && \
     mv LaunChair/launcher.py /usr/bin/ && \
     rm -rf LaunChair
 
-RUN wget http://zlib.net/zlib-1.2.11.tar.gz && \
-    tar xzf zlib-1.2.11.tar.gz && \
-    cd zlib-1.2.11 && \
-    ./configure && \
-    make && \
-    make install && \
-    cd .. && rm -rf zlib-1.2.11.tar.gz zlib-1.2.11
+#RUN wget http://zlib.net/pigz/pigz-2.7.tar.gz && \
+#    tar xzf pigz-2.7.tar.gz && \
+#    cd pigz-2.7 && \
+#    make && \
+#    mv pigz /usr/bin/ && \
+#    mv unpigz /usr/bin/ && \
+#    rm -rf pigz-2.4.tar.gz pigz-2.4
 
-RUN wget http://zlib.net/pigz/pigz-2.4.tar.gz && \
-    tar xzf pigz-2.4.tar.gz && \
-    cd pigz-2.4 && \
-    make && \
-    mv pigz /usr/bin/ && \
-    mv unpigz /usr/bin/ && \
-    rm -rf pigz-2.4.tar.gz pigz-2.4
-
-RUN wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 && \
-    tar xfj htslib-1.9.tar.bz2 && \
-    cd htslib-1.9 && \
+RUN wget https://github.com/samtools/htslib/releases/download/${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION}.tar.bz2 && \
+    tar xfj htslib-${SAMTOOLS_VERSION}.tar.bz2 && \
+    cd htslib-${SAMTOOLS_VERSION} && \
     make -j 4 && \
     make install && \
-    rm -rf htslib-1.9.tar.bz2
+    rm -rf htslib-${SAMTOOLS_VERSION}.tar.bz2
 
-RUN wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && \
-    tar xfj samtools-1.9.tar.bz2 && \
-    cd samtools-1.9 && make -j 4 && \
+RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 && \
+    tar xfj samtools-${SAMTOOLS_VERSION}.tar.bz2 && \
+    cd samtools-${SAMTOOLS_VERSION} && make -j 4 && \
     make install && \
-    rm -rf samtools-1.9.tar.bz2
+    rm -rf samtools-${SAMTOOLS_VERSION}.tar.bz2
 
-RUN wget https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2 && \
-    tar xjf bcftools-1.9.tar.bz2 && \
-    cd bcftools-1.9 && \
+RUN wget https://github.com/samtools/bcftools/releases/download/${SAMTOOLS_VERSION}/bcftools-${SAMTOOLS_VERSION}.tar.bz2 && \
+    tar xjf bcftools-${SAMTOOLS_VERSION}.tar.bz2 && \
+    cd bcftools-${SAMTOOLS_VERSION} && \
     make -j 4 && \
     make install && \
-    rm -rf bcftools-1.9.tar.bz2
+    rm -rf bcftools-${SAMTOOLS_VERSION}.tar.bz2
 
 RUN git clone https://github.com/edawson/helpy.git && \
     mv helpy/* /usr/bin/ && \
