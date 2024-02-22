@@ -65,3 +65,6 @@ RUN wget http://zlib.net/pigz/pigz-2.4.tar.gz && \
 RUN git clone --recursive https://github.com/edawson/interleave-fastq && \
     chmod 777 interleave-fastq/interleave-fastq && \
     mv interleave-fastq/interleave-fastq /usr/bin/
+
+
+## TODO: install miniconda, set up mamba and fast pip

@@ -10,6 +10,14 @@ developed by the Broad Institute and used as the backend to their FireCloud anal
 written for the platform. It contains many common bioinformatics workflows (e.g. sort and index a BAM) as
 well as more specialized software, including variant / SV callers.
 
+## Workflow
+When integrating a new tool:
+ - [ ] Create a Dockerfile for the tool in the dockerfiles directory. The dockerfile should be named toolname.Dockerfile.
+ - [ ] The entrypoint should be the shell (i.e., no run command, or CMD bash).
+ - [ ] Build the image from the dockerfile by running `make build APP=toolname`
+ - [ ] Create a workflow for the tool and add it to the workflows dir in a subdirectory.
+ - [ ] Make sure to push the image to the repository of your choice. The repo can be set in the makefile, and the image can be pushed with `make push APP=toolname`.
+
 ## Dockerfiles
 All of the Dockerfiles in the [dockerfiles](https://github.com/edawson/dawdl/tree/master/dockerfiles)
 directory are built on top of a single base Dockerfile. The [build_all](https://github.com/edawson/dawdl/blob/master/build_all.sh)
